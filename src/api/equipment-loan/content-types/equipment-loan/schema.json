@@ -1,0 +1,56 @@
+{
+  "kind": "collectionType",
+  "collectionName": "equipment_loans",
+  "info": {
+    "singularName": "equipment-loan",
+    "pluralName": "equipment-loans",
+    "displayName": "Equipment Loan",
+    "description": "ระบบจัดการยืม-คืนอุปกรณ์คอมพิวเตอร์"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "loan_code": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "borrower_name": {
+      "type": "string",
+      "required": true
+    },
+    "borrower_phone": {
+      "type": "string",
+      "description": "เบอร์โทรศัพท์ผู้ยืม (จะถูกเข้ารหัส AES-256 ก่อนบันทึก)"
+    },
+    "equipment_name": {
+      "type": "string",
+      "required": true
+    },
+    "equipment_serial": {
+      "type": "string",
+      "description": "หมายเลข Serial ของอุปกรณ์ (จะถูกเข้ารหัส AES-256 ก่อนบันทึก)"
+    },
+    "borrow_date": {
+      "type": "date",
+      "required": true
+    },
+    "return_date": {
+      "type": "date"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["borrowing", "returned", "damaged"],
+      "default": "borrowing"
+    },
+    "fine_amount": {
+      "type": "decimal",
+      "default": 0
+    },
+    "integrity_hash": {
+      "type": "string",
+      "description": "ค่า MD5 Checksum สำหรับตรวจจับการแอบแก้ไขข้อมูล"
+    }
+  }
+}

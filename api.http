@@ -1,0 +1,69 @@
+### =========================================================================
+### 69-s1-app2 — ระบบจัดการยืม-คืนอุปกรณ์คอมพิวเตอร์
+### ไฟล์ทดสอบ REST API (เปิดด้วย VS Code Extension: "REST Client" หรือ "HTTP Runner")
+### รัน Strapi ก่อน:  npm run build   แล้ว   npm run start   (port 1337)
+### =========================================================================
+
+### 1. ดึงรายการยืมทั้งหมด (find)
+###    ผลลัพธ์: borrower_phone / equipment_serial ถูกถอดรหัส AES-256 ให้อ่านได้
+GET http://localhost:1337/api/equipment-loans
+
+###
+
+### 2. ดึงข้อมูลการยืม 1 รายการ (findOne) — ระบุ loan_code หรือ documentId
+GET http://localhost:1337/api/equipment-loans?filters[loan_code][$eq]=LN-2026-001
+
+###
+
+### 3. สร้างรายการยืมใหม่ (create)
+###    ข้อมูลที่กรอกจะถูกเข้ารหัส AES-256 และผูก integrity_hash (MD5) อัตโนมัติ
+# @name createLoan
+POST http://localhost:1337/api/equipment-loans
+Content-Type: application/json
+
+{
+    "data": {
+        "loan_code": "LN-2026-006",
+        "borrower_name": "Wachirawit Kantho",
+        "borrower_phone": "081-234-5678",
+        "equipment_name": "โน้ตบุ๊ก Lenovo ThinkPad (รหัสครุภัณฑ์ CP-150)",
+        "equipment_serial": "PF-3XK9QL",
+        "borrow_date": "2026-10-06",
+        "status": "borrowing",
+        "fine_amount": 0
+    }
+}
+
+###
+
+### 4. ตรวจสอบความถูกต้องของข้อมูล (verifyIntegrity) ด้วยรหัสการยืม
+###    ผลปกติ:  "is_valid": true  /  SECURE_AND_VERIFIED
+GET http://localhost:1337/api/equipment-loans/LN-2026-001/verify
+
+###
+
+### 5. ตรวจสอบความถูกต้องด้วย documentId ที่ได้จากการสร้างข้อมูลข้อ 3
+GET http://localhost:1337/api/equipment-loans/{{createLoan.response.body.data.documentId}}/verify
+
+###
+
+### =========================================================================
+### 6. สาธิตการจับการแอบแก้ไข (Tamper Simulation)
+###    แก้ไขค่าในฐานข้อมูลโดยตรง (ข้ามระบบ) แล้วเรียก /verify ซ้ำ
+###
+###    เปิด PowerShell แล้วรันคำสั่ง SQL ต่อไปนี้:
+###
+###    npx strapi console   แล้วพิมพ์:
+###      await strapi.db.connection.raw(
+###        "UPDATE equipment_loans SET fine_amount = 9999, status = 'returned' WHERE loan_code = 'LN-2026-001'"
+###      );
+###      process.exit(0)
+###
+###    หรือแก้ด้วย GUI เช่น DB Browser for SQLite ที่ไฟล์ .tmp/data.db
+###    จากนั้นเรียก GET /api/equipment-loans/LN-2026-001/verify อีกครั้ง
+###    ผลลัพธ์จะกลายเป็น:
+###      "is_valid": false
+###      "verification": "TAMPER_DETECTED (DATA MODIFIED)"
+###      "message": "แจ้งเตือนความปลอดภัย! ข้อมูลถูกแอบแก้ไขโดยตรงในฐานข้อมูล (MD5 Checksum Mismatch)"
+###      "security_info.integrity.computed_hash" จะไม่ตรงกับ "stored_hash"
+### =========================================================================
