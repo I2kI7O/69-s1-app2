@@ -194,7 +194,7 @@ Content-Type: application/json
 | สร้างข้อมูล | `POST /api/equipment-loans` | **201 Created**, บันทึกเป็น `enc:...` + `integrity_hash` |
 | duplicate | `POST` loan_code ซ้ำ | **400** (unique constraint) |
 | ตรวจสอบความถูกต้อง | `GET .../LN-2026-001/verify` | `is_valid: true`, `SECURE_AND_VERIFIED` |
-| **จับการแอบแก้ไข** | แก้ `fine_amount = 9999` ใน DB ตรงๆ แล้ว verify | `is_valid: false`, `verification: TAMPER_DETECTED (DATA MODIFIED)` |
+| **จับการแอบแก้ไข** | แก้ `fine_amount = 9999` ใน DB ตรงๆ แล้ว verify | `is_valid: false`, `status: TAMPER_DETECTED (DATA MODIFIED)` |
 | คืนค่าแล้ว verify | restore ค่าเดิม | `is_valid: true` กลับมา |
 | ข้อมูลใน DB | อ่านไฟล์ `.tmp/data.db` | เบอร์โทร/Serial เก็บเป็น `enc:` ทุกแถว, `borrower_name` เป็นข้อความไทย/อังกฤษปกติ |
 
@@ -204,7 +204,7 @@ Content-Type: application/json
 {
   "loan_code": "LN-2026-001",
   "is_valid": false,
-  "verification": "TAMPER_DETECTED (DATA MODIFIED)",
+  "status": "TAMPER_DETECTED (DATA MODIFIED)",
   "message": "แจ้งเตือนความปลอดภัย! ข้อมูลถูกแอบแก้ไขโดยตรงในฐานข้อมูล (MD5 Checksum Mismatch)",
   "security_info": {
     "confidentiality": {

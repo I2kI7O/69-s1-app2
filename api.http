@@ -63,7 +63,7 @@ GET http://localhost:1337/api/equipment-loans/{{createLoan.response.body.data.do
 ###    จากนั้นเรียก GET /api/equipment-loans/LN-2026-001/verify อีกครั้ง
 ###    ผลลัพธ์จะกลายเป็น:
 ###      "is_valid": false
-###      "verification": "TAMPER_DETECTED (DATA MODIFIED)"
+###      "status": "TAMPER_DETECTED (DATA MODIFIED)"
 ###      "message": "แจ้งเตือนความปลอดภัย! ข้อมูลถูกแอบแก้ไขโดยตรงในฐานข้อมูล (MD5 Checksum Mismatch)"
 ###      "security_info.integrity.computed_hash" จะไม่ตรงกับ "stored_hash"
 ### =========================================================================

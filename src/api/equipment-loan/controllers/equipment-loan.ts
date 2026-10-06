@@ -56,10 +56,10 @@ export default factories.createCoreController(
         loan_code: loan.loan_code,
         borrower: loan.borrower_name,
         equipment: loan.equipment_name,
-        status: loan.status,
+        loan_status: loan.status,
         fine_amount: loan.fine_amount,
         is_valid: isValid,
-        verification: isValid ? 'SECURE_AND_VERIFIED' : 'TAMPER_DETECTED (DATA MODIFIED)',
+        status: isValid ? 'SECURE_AND_VERIFIED' : 'TAMPER_DETECTED (DATA MODIFIED)',
         message: isValid
           ? 'ข้อมูลถูกต้องสมบูรณ์ ไม่มีการถูกแอบแก้ไข'
           : 'แจ้งเตือนความปลอดภัย! ข้อมูลถูกแอบแก้ไขโดยตรงในฐานข้อมูล (MD5 Checksum Mismatch)',
