@@ -93,6 +93,12 @@ equipment_serial = enc:69e437f229f83fe0b8e5f3468151d3a0:f11b53af76dedb843cab44d7
 ## 5. วิธีติดตั้งและรัน
 
 ```powershell
+# 0) สร้างไฟล์ .env จากเทมเพลต แล้วเติมค่า secret ของตัวเอง
+Copy-Item .env.example .env
+#    - ตั้ง DATA_ENCRYPTION_KEY ให้ยาวอย่างน้อย 32 characters (ใช้ทำ AES-256)
+#    - ตั้ง APP_KEYS / JWT_SECRET / ADMIN_JWT_SECRET ให้เป็นค่าสุ่มของตัวเอง
+#    - ระบบจะ seed ข้อมูลตัวอย่างและตั้งสิทธิ์ Public ให้อัตโนมัติตอนเริ่มครั้งแรก
+
 # 1) ติดตั้ง dependency
 npm install
 
